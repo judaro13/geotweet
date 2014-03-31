@@ -6,8 +6,12 @@ class Tweet
   field :tweet_id, type: String
   field :pub_date, type: DateTime
   field :content,  type: String
+  field :ranks, type: Hash, default: {}
   
   field :location, type: Point
+  
+  belongs_to :user
+  
   spatial_index :location
   
   before_save :set_tweet_location

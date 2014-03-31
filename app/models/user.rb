@@ -7,4 +7,6 @@ class User
   
   validate_presence_of :name
   validates_uniqueness_of :name, :nickname
+  
+  has_many :tweets
 end
