@@ -38,7 +38,7 @@ class ImportCsv
       tweet.content = record[2].to_s
       
       (5..12).each do |count|
-        tweet.ranks[count.to_s] = record[count].to_i if record[count]
+        tweet.ranks[count-4] = record[count].to_i if record[count]
       end
       tweet.save
       puts c += 1
