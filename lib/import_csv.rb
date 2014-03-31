@@ -7,7 +7,7 @@ require 'csv'
 class ImportCsv
   attr_writer     :file
   
-  def initialize(file = "/home/juliana/Uniandes/bigdata/lab3/geotwits/public/dataset.csv")
+  def initialize(file = "#{Rails.root}/public/dataset.csv")
     @file = file
   end
 

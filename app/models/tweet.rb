@@ -7,6 +7,7 @@ class Tweet
   field :pub_date, type: DateTime
   field :content,  type: String
   field :ranks, type: Hash, default: {}
+  field :hashtags, type: Array, default: []
   
   field :city, type: String
   field :location, type: Point
@@ -16,6 +17,7 @@ class Tweet
   spatial_index :location
   
   before_save :set_tweet_location
+  before_save :set_tweet_hashtags
   
   CITIES = [ 'New York', 'NY', 'Los Angeles', 'LA', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin',
              'Jacksonville', 'Indianapolis', 'San Francisco', 'Columbus', 'Fort Worth', 'Charlotte', 'Detroit', 'El Paso', 'Memphis', 'Boston', 'Seattle', 'Denver',
@@ -50,6 +52,14 @@ class Tweet
     if city = cities.first
       self.city = city
       self.location = Geocoder.search(city).first.coordinates
+    end
+  end
+  
+  def set_tweet_hashtags
+    regex = /(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/i
+    hashtags = self.content.scan(regex)
+    unless hashtags.empty?
+      self.hashtags += hashtags.flatten
     end
   end
    
