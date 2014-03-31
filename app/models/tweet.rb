@@ -36,13 +36,16 @@ class Tweet
              'Clearwater', 'Lowell', 'West Jordan', 'Pueblo', 'San Buenaventura ', 'Ventura', 'Fairfield', 'West Covina', 'Billings', 'Murrieta', 'High Point', 'Round Rock',
              'Richmond', 'Cambridge', 'Norwalk', 'Odessa', 'Antioch', 'Temecula', 'Green Bay', 'Everett', 'Wichita Falls', 'Burbank', 'Palm Bay', 'Centennial', 'Daly City',
              'Richardson', 'Pompano Beach', 'Broken Arrow', 'North Charleston', 'West Palm Beach', 'Boulder', 'Rialto', 'Santa Maria', 'El Cajon', 'Davenport', 'Erie',
-             'Las Cruces', 'South Bend', 'Flint', 'Kenosha']
+             'Las Cruces', 'South Bend', 'Flint', 'Kenosha'].uniq(&:downcase).sort_by(&:downcase)
+  
   
   def set_tweet_location
+    regex = /\b#{ Regexp.union(CITIES) }\b/i
+    cities = text.scan(regex)
+    if city = cities.first
+      self.location = Point.new(Geocoder.search(city).first.coordinates)
+    end
   end
-  
-  
-  
-  
+   
 end
 
