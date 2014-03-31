@@ -11,8 +11,9 @@ gem 'turbolinks'
 gem 'haml'
 
 # Mongoid
-gem 'mongoid'
-gem 'mongoid_indexing'
+gem 'mongoid', github: 'mongoid/mongoid'
+gem 'mongoid_geospatial', github: 'nofxx/mongoid_geospatial', branch: 'master'
+gem 'mongoid_indexing', github: 'kristianmandrup/mongoid_indexing', branch: 'master'
 gem 'geocoder'
 
 gem 'jbuilder', '~> 1.2'
