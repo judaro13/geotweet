@@ -8,6 +8,7 @@ class Tweet
   field :content,  type: String
   field :ranks, type: Hash, default: {}
   
+  field :city, type: String
   field :location, type: Point
   
   belongs_to :user
@@ -45,9 +46,10 @@ class Tweet
   
   def set_tweet_location
     regex = /\b#{ Regexp.union(CITIES) }\b/i
-    cities = text.scan(regex)
+    cities = self.content.scan(regex)
     if city = cities.first
-      self.location = Point.new(Geocoder.search(city).first.coordinates)
+      self.city = city
+      self.location = Geocoder.search(city).first.coordinates
     end
   end
    

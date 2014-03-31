@@ -5,7 +5,7 @@ class User
   field :name, type: String
   field :nickname, type: String
   
-  validate_presence_of :name
+  validates_presence_of :name
   validates_uniqueness_of :name, :nickname
   
   has_many :tweets
