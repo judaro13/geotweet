@@ -19,6 +19,15 @@ class Tweet
   before_save :set_tweet_location
   before_save :set_tweet_hashtags
   
+  def rank
+    last = 8
+    while last > 0
+      return self.ranks[last.to_s] if self.ranks[last.to_s] != 0
+      last -= 1
+    end
+  end
+  
+  
   CITIES = [ 'New York', 'NY', 'Los Angeles', 'LA', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin',
              'Jacksonville', 'Indianapolis', 'San Francisco', 'Columbus', 'Fort Worth', 'Charlotte', 'Detroit', 'El Paso', 'Memphis', 'Boston', 'Seattle', 'Denver',
              'Washington', 'Nashville', 'Baltimore', 'Louisville', 'Portland', 'Oklahoma City', 'Milwaukee', 'Las Vegas', 'Albuquerque', 'Tucson', 'Fresno', 'Sacramento',
