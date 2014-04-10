@@ -52,29 +52,33 @@ namespace :counter do
   
   task stats: :environment do
 #     StweetStat.delete_all
-#     sstat = StweetStat.new
+#     sstats = StweetStat.new
 #     Stweet.all.each do |t|      
-#       sstat.rank_lexicon[t.rank_total_lexicon] ||= 0 if t.rank_total_lexicon
-#       sstat.rank_lexicon[t.rank_total_lexicon] += 1 if t.rank_total_lexicon
-#       sstat.save!
+#       sstats.rank_lexicon[t.rank_total_lexicon.to_s] ||= 0 if t.rank_total_lexicon
+#       sstats.rank_lexicon[t.rank_total_lexicon.to_s] += 1 if t.rank_total_lexicon
+#       sstats.save!
 #       print "."
 #     end
     
     puts ""
     puts "*"*100
     puts ""
-    TweetStat.delete_all
-    stat = TweetStat.new
+    stats = TweetStat.first
     Tweet.all.each do |t|
-      stat.ranks[t.rank] ||= 0  if t.rank
-      stat.ranks[t.rank] +=1 if t.rank
+      stats.ranks[t.rank] ||= 0  if t.rank
+      stats.ranks[t.rank] +=1 if t.rank
       
-      stat.rank_lexicon[t.rank_total_lexicon] ||= 0 if t.rank_total_lexicon
-      stat.rank_lexicon[t.rank_total_lexicon] += 1 if t.rank_total_lexicon
+      if t.rank_lexicon.first
+        t.rank_total_lexicon = t.rank_lexicon.first["positive"]+t.rank_lexicon.first["negative"]
+        t.rank_total_lexicon = 1 if t.rank_total_lexicon == 0 || t.rank_total_lexicon == -1
+        
+        stats.rank_lexicon[t.rank_total_lexicon.to_s] ||= 0 if t.rank_total_lexicon
+        stats.rank_lexicon[t.rank_total_lexicon.to_s] += 1 if t.rank_total_lexicon
+      end
       
-      stat.rank_ling_pipe[t.rank_total_ling_pipe] ||= 0 if t.rank_total_ling_pipe
-      stat.rank_ling_pipe[t.rank_total_ling_pipe] += 1 if t.rank_total_ling_pipe
-      stat.save
+      stats.rank_ling_pipe[t.rank_total_ling_pipe] ||= 0 if t.rank_total_ling_pipe
+      stats.rank_ling_pipe[t.rank_total_ling_pipe] += 1 if t.rank_total_ling_pipe
+      stats.save
       print "."
     end
     

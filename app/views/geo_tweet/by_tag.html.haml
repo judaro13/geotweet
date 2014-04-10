@@ -5,11 +5,14 @@
       %a{href: by_tag_path(tag.name), style: "color: gray;"}
         %span.badge.pull-right=tag.counter
         = tag.name
+
 .introSection
   .container
     .row
       .col-lg-12
-        %h3 Análisis de Sentimientos En todos los Tweets
+        %h3 
+          Tweets con Hashtag 
+          %b #{params[:tag]}
         %p
           %ul#tabs.nav.nav-tabs{"data-tabs" => "tabs"}
             %li.active
@@ -21,42 +24,23 @@
           #my-tab-content.tab-content
             #red.tab-pane.active
               = render "tsdb"
-              = render "bubbles", tweets: tsdb_tweets.to_json, div: "tsdb"
+              = render "bubbles", tweets: tsdb_tweets_by_tag(params[:tag]).to_json, div: "tsdb"
             #orange.tab-pane
               = render "lbsa"
-              = render "bubbles", tweets: lbsa_tweets.to_json, div: "lbsa"
+              = render "bubbles", tweets: lbsa_tweets_by_tag(params[:tag]).to_json, div: "lbsa"
             #yellow.tab-pane
               = render "ling_pipe"
-              = render "bubbles", tweets: ling_pipe_tweets.to_json, div: "lingpipe"
+              = render "bubbles", tweets: ling_pipe_tweets_by_tag(params[:tag]).to_json, div: "lingpipe"
+
 .introSection
   .container
     .row
       .col-lg-12
-        %h3 Análisis de Sentimientos Por Principales HashTags
-.introSection
-  .container
-    .row
-      .col-lg-12
-        %h4 Twitter Sentiment Dataset 2008 Debates
-        %p
-          %tsdb-tags
-          = render "by_tags", tags: tsdb_tags, div: "tsdb-tags"
-.introSection
-  .container
-    .row
-      .col-lg-12
-        %h4 Lexicon-Based Sentiment Analysis
-        %p
-          %lbsa-tags
-          = render "by_tags", tags: lbsa_tags, div: "lbsa-tags"
-.introSection
-  .container
-    .row
-      .col-lg-12
-        %h4 Ling Pipe
-        %p
-          %lingpipe-tags
-          = render "by_tags", tags: ling_pipe_tags, div: "lingpipe-tags"
+        %h3 
+          Listado de tweets
+        - @tweets.each do |t|
+          %p
+            =t.content
         
 :javascript
   $('#tabs').tab();
