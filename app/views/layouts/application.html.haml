@@ -1,0 +1,50 @@
+!!!
+%html
+  %head
+    %title Geotweets
+    
+    %link{href: "//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css", rel: "stylesheet"}/
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = stylesheet_link_tag    "carousel", media: "all", "data-turbolinks-track" => true
+   
+
+    = javascript_include_tag "//code.jquery.com/jquery-1.11.0.min.js"
+    = javascript_include_tag "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"
+    = javascript_include_tag "http://d3js.org/d3.v3.min.js"
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = javascript_include_tag "holder", "data-turbolinks-track" => true
+    = csrf_meta_tags
+    
+  %body
+    .navbar-wrapper
+      .container
+        .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
+          .container
+            .navbar-header
+              %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
+                %span.sr-only Toggle navigation
+                %span.icon-bar
+                %span.icon-bar
+                %span.icon-bar
+              %a.navbar-brand{href: "index.html"} GeoTweets
+            .navbar-collapse.collapse
+              %ul.nav.navbar-nav
+                %li.active
+                  %a{href: "index.html"} Home
+                %li
+                  %a{href: "about.html"} Tweets en Inglés
+                %li
+                  %a{href: "contact.html"} Tweets en Español
+    = yield
+
+    %footer
+      .container
+        %p.pull-right
+          %a{href: "#"} Subir
+        %p
+          Grupo 03 - go.laura10 dr.juliana10 cr.calle
+        %p
+
+          %a{href: "#"} Análisis de BigData
+          \·
+          %a{href: "#"} Universidad de los Andes

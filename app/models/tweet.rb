@@ -7,6 +7,11 @@ class Tweet
   field :pub_date, type: DateTime
   field :content,  type: String
   field :ranks, type: Hash, default: {}
+  field :rank, type: Integer
+  field :rank_ling_pipe, type: Hash
+  field :rank_total_ling_pipe
+  field :rank_lexicon, type: Hash, default: {}
+  field :rank_total_lexicon
   field :hashtags, type: Array, default: []
   
   field :city, type: String
@@ -16,16 +21,33 @@ class Tweet
   
   spatial_index :location
   
-  before_save :set_tweet_location
-  before_save :set_tweet_hashtags
+#   before_save :set_tweet_location
+#   before_save :set_tweet_hashtags
   
-  def rank
-    last = 8
-    while last > 0
-      return self.ranks[last.to_s] if self.ranks[last.to_s] != 0
-      last -= 1
+  def set_tweet_location
+    regex = /\b#{ Regexp.union(CITIES) }\b/i
+    cities = self.content.scan(regex)
+    if city = cities.first
+      self.city = city
+      self.location = Geocoder.search(city).first.coordinates
     end
   end
+  
+  def set_tweet_hashtags
+    regex = /(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/i
+    hashtags = self.content.scan(regex)
+    unless hashtags.empty?
+      Set.new(hashtags.flatten).to_a.each do |tag|
+        if tag = Tag.where(name: tag).first
+          tag.up_counter
+        else
+          Tag.create(name: tag)
+        end
+      end
+    end
+  end
+   
+  
   
   
   CITIES = [ 'New York', 'NY', 'Los Angeles', 'LA', 'Chicago', 'Houston', 'Philadelphia', 'Phoenix', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin',
@@ -53,24 +75,5 @@ class Tweet
              'Richmond', 'Cambridge', 'Norwalk', 'Odessa', 'Antioch', 'Temecula', 'Green Bay', 'Everett', 'Wichita Falls', 'Burbank', 'Palm Bay', 'Centennial', 'Daly City',
              'Richardson', 'Pompano Beach', 'Broken Arrow', 'North Charleston', 'West Palm Beach', 'Boulder', 'Rialto', 'Santa Maria', 'El Cajon', 'Davenport', 'Erie',
              'Las Cruces', 'South Bend', 'Flint', 'Kenosha'].uniq(&:downcase).sort_by(&:downcase)
-  
-  
-  def set_tweet_location
-    regex = /\b#{ Regexp.union(CITIES) }\b/i
-    cities = self.content.scan(regex)
-    if city = cities.first
-      self.city = city
-      self.location = Geocoder.search(city).first.coordinates
-    end
-  end
-  
-  def set_tweet_hashtags
-    regex = /(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/i
-    hashtags = self.content.scan(regex)
-    unless hashtags.empty?
-      self.hashtags += hashtags.flatten
-    end
-  end
-   
 end
 

@@ -1,0 +1,29 @@
+= render "map"
+%ul.nav.nav-pills
+  -@tags.each do |tag|
+    %li.notice
+      %a{href: "#", style: "color: gray;"}
+        %span.badge.pull-right=tag.counter
+        = tag.name
+.introSection
+  .container
+    .row
+      .col-lg-12
+        %h3 Análisis de Sentimientos Por Tweets
+        %p
+          %ul#tabs.nav.nav-tabs{"data-tabs" => "tabs"}
+            %li.active
+              %a{"data-toggle" => "tab", href: "#red", style: "color: gray;"} TSDB
+            %li
+              %a{"data-toggle" => "tab", href: "#orange", style: "color: gray;"} LBSA
+            %li
+              %a{"data-toggle" => "tab", href: "#yellow", style: "color: gray;"} Ling Pipe
+          #my-tab-content.tab-content
+            #red.tab-pane.active
+              = render "tsdb"
+            #orange.tab-pane
+              = render "lbsa"
+            #yellow.tab-pane
+              = render "ling_pipe"
+:javascript
+  $('#tabs').tab();
