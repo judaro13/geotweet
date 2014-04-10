@@ -2,7 +2,7 @@
 %ul.nav.nav-pills
   -@tags.each do |tag|
     %li.notice
-      %a{href: by_tag_path(tag.name), style: "color: gray;"}
+      %a{href: by_tag_path(tag.name, stweet: "stweet"), style: "color: gray;"}
         %span.badge.pull-right=tag.counter
         = tag.name
 .introSection
@@ -15,33 +15,11 @@
 #bubbles.active
   .container
     .marketing       
+      .itemsTitle Lexicon-Based Sentiment Analysis
       %p
-        %ul#tabs.nav.nav-tabs{"data-tabs" => "tabs"}
-          %li.active
-            %a{"data-toggle" => "tab", href: "#red", style: "color: gray;"} TSDB
-          %li
-            %a{"data-toggle" => "tab", href: "#orange", style: "color: gray;"} LBSA
-          %li
-            %a{"data-toggle" => "tab", href: "#yellow", style: "color: gray;"} Ling Pipe
-        #my-tab-content.tab-content
-          #red.tab-pane.active
-            = render "tsdb"
-            = render "bubbles", tweets: tsdb_tweets.to_json, div: "tsdb"
-          #orange.tab-pane
-            = render "lbsa"
-            = render "bubbles", tweets: lbsa_tweets.to_json, div: "lbsa"
-          #yellow.tab-pane
-            = render "ling_pipe"
-            = render "bubbles", tweets: ling_pipe_tweets.to_json, div: "lingpipe"
+        = render "lbsa"
+        = render "bubbles", tweets: lbsa_tweets("stweet").to_json, div: "lbsa"
 #bars
-  .container
-    .marketing
-      .row
-        .col-lg-12
-          .itemsTitle Twitter Sentiment Dataset 2008 Debates
-          %p
-            %tsdb-tags
-            = render "by_tags", tags: tsdb_tags, div: "tsdb-tags"
   .container
     .marketing
       .row
@@ -49,15 +27,7 @@
           .itemsTitle Lexicon-Based Sentiment Analysis
           %p
             %lbsa-tags
-            = render "by_tags", tags: lbsa_tags, div: "lbsa-tags"
-  .container
-    .marketing
-      .row
-        .col-lg-12
-          .itemsTitle Ling Pipe
-          %p
-            %lingpipe-tags
-            = render "by_tags", tags: ling_pipe_tags, div: "lingpipe-tags"
+            = render "by_tags", tags: lbsa_tags("stweet"), div: "lbsa-tags", stweet: "stweet"
 
 :javascript
   $("#bars").hide();

@@ -51,14 +51,14 @@ namespace :counter do
   end
   
   task stats: :environment do
-#     StweetStat.delete_all
-#     sstats = StweetStat.new
-#     Stweet.all.each do |t|      
-#       sstats.rank_lexicon[t.rank_total_lexicon.to_s] ||= 0 if t.rank_total_lexicon
-#       sstats.rank_lexicon[t.rank_total_lexicon.to_s] += 1 if t.rank_total_lexicon
-#       sstats.save!
-#       print "."
-#     end
+    StweetStat.delete_all
+    sstats = StweetStat.new
+    Stweet.all.each do |t|      
+      sstats.rank_lexicon[t.rank_total_lexicon.to_s] ||= 0 if t.rank_total_lexicon
+      sstats.rank_lexicon[t.rank_total_lexicon.to_s] += 1 if t.rank_total_lexicon
+      sstats.save!
+      print "."
+    end
     
     puts ""
     puts "*"*100

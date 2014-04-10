@@ -1,3 +1,5 @@
+- x = params[:stweet] || request.url.include?("colombian") ? 4.609866 : 39.737567
+- y = params[:stweet] || request.url.include?("colombian") ? -74.08205 : -104.9847179
 #mainCarousel
   #myCarousel
     .carousel-inner
@@ -7,7 +9,8 @@
         :javascript
           function initialize() 
           {
-            var myLatlng = new google.maps.LatLng(39.737567,-104.9847179);
+          
+            var myLatlng = new google.maps.LatLng(#{x},#{y});
             var mapOptions = 
             {
               zoom: 4,

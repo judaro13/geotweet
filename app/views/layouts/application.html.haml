@@ -11,8 +11,8 @@
     = javascript_include_tag "//code.jquery.com/jquery-1.11.0.min.js"
     = javascript_include_tag "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"
     = javascript_include_tag "http://d3js.org/d3.v3.min.js"
-    = javascript_include_tag "application", "data-turbolinks-track" => true
-    = javascript_include_tag "holder", "data-turbolinks-track" => true
+    = javascript_include_tag "application"
+    = javascript_include_tag "holder"
     = csrf_meta_tags
     
   %body
@@ -26,15 +26,13 @@
                 %span.icon-bar
                 %span.icon-bar
                 %span.icon-bar
-              %a.navbar-brand{href: "/"} GeoTweets
+              %a.navbar-brand{href: root_path} GeoTweets
             .navbar-collapse.collapse
               %ul.nav.navbar-nav
-                %li.active
-                  %a{href: "/"} Home
-                %li
-                  %a{href: "/"} Tweets en Inglés
-                %li
-                  %a{href: colombian_tweets_path} Tweets en Español
+                %li{class: !(params[:stweet] || request.url.include?("colombian")) ? "active" : ""}
+                  = link_to "Tweets en Inglés", root_path
+                %li{class: params[:stweet] || request.url.include?("colombian") ? "active" : ""}
+                  = link_to "Tweets Colombianos", colombian_tweets_path
     = yield
 
     %footer

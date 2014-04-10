@@ -19,7 +19,7 @@ class Stweet
   
   spatial_index :location
   
-  before_save :set_tweet_location
+#   before_save :set_tweet_location
   before_save :set_tweet_hashtags
   
 
@@ -49,11 +49,16 @@ class Stweet
     regex = /(?:\s|^)(?:#(?!(?:\d+|\w+?_|_\w+?)(?:\s|$)))(\w+)(?=\s|$)/i
     hashtags = self.text.scan(regex)
     unless hashtags.empty?
-      Set.new(hashtags.flatten).to_a.each do |tag|
-        if tag = Tag.where(name: tag).first
+      self.hashtags = Set.new(hashtags.flatten).to_a
+      self.hashtags.each do |t|
+        if tag = Tag.where(name: t).first
+          tag.lang = "es"
           tag.up_counter
         else
-          Tag.create(name: tag, lang: "es")
+          tag = Tag.new
+          tag.name = t
+          tag.lang = "es"
+          tag.save
         end
       end
     end

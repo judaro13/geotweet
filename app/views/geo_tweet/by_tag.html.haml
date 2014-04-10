@@ -2,42 +2,87 @@
 %ul.nav.nav-pills
   -@tags.each do |tag|
     %li.notice
-      %a{href: by_tag_path(tag.name), style: "color: gray;"}
+      %a{href: by_tag_path(tag.name, stweet: params[:stweet]), style: "color: gray;"}
         %span.badge.pull-right=tag.counter
         = tag.name
 
 .introSection
   .container
-    .row
-      .col-lg-12
-        %h3 
+    .navbar-content
+      %h3
+        %a{href: "#bubbles", style: "color: black;", "onclick" => 'show_bubbles()', id: "title-bubbles"} 
           Tweets con Hashtag 
           %b #{params[:tag]}
-        %p
-          %ul#tabs.nav.nav-tabs{"data-tabs" => "tabs"}
+        |
+        %a{href: "#bars", style: "color: gray;", "onclick" => 'show_bars()', id: "title-bars"} Listado de tweets
+#bubbles.active
+  .container
+    .marketing   
+      %p
+        %ul#tabs.nav.nav-tabs{"data-tabs" => "tabs"}
+          -unless params[:stweet]
             %li.active
               %a{"data-toggle" => "tab", href: "#red", style: "color: gray;"} TSDB
-            %li
-              %a{"data-toggle" => "tab", href: "#orange", style: "color: gray;"} LBSA
+          %li{class: params[:stweet] ? "active" : ""}
+            %a{"data-toggle" => "tab", href: "#orange", style: "color: gray;"} LBSA
+          -unless params[:stweet]
             %li
               %a{"data-toggle" => "tab", href: "#yellow", style: "color: gray;"} Ling Pipe
-          #my-tab-content.tab-content
+        #my-tab-content.tab-content
+          -unless params[:stweet]
             #red.tab-pane.active
               = render "tsdb"
               = render "bubbles", tweets: tsdb_tweets_by_tag(params[:tag]).to_json, div: "tsdb"
-            #orange.tab-pane
-              = render "lbsa"
-              = render "bubbles", tweets: lbsa_tweets_by_tag(params[:tag]).to_json, div: "lbsa"
+          #orange.tab-pane{class: params[:stweet] ? "active" : ""}
+            = render "lbsa"
+            = render "bubbles", tweets: lbsa_tweets_by_tag(params[:tag], params[:stweet]).to_json, div: "lbsa"
+          -unless params[:stweet]
             #yellow.tab-pane
               = render "ling_pipe"
               = render "bubbles", tweets: ling_pipe_tweets_by_tag(params[:tag]).to_json, div: "lingpipe"
-
-.introSection
+#bars                   
   .container
-    .row
-      .col-lg-12
-        %h3 
-          Listado de tweets
-        - @tweets.each do |t|
+    .marketing  
+      - @tweets.each do |t|
+        .itemsTitle
+        %h4
+          =t.content
+        
+        %p
+          %b
+            = lbsa_span(t.rank_total_lexicon).html_safe
+            Lexicon-Based Sentiment Analysis
+        -if !params[:stweet]
           %p
-            =t.content
+            %b
+              = rank_span(t.rank).html_safe
+              Twitter Sentiment Dataset 2008 Debates
+          %p
+            %b
+              = rank_span(t.rank_total_ling_pipe).html_safe
+              Ling Pipe
+
+:javascript
+  $("#bars").hide();
+  
+  function show_bubbles(){
+    $("#bubbles").removeAttr( 'style' );
+    $("#bars").removeAttr( 'style' );
+    $("#title-bars").removeAttr( 'style' );
+    $("#title-bubbles").removeAttr( 'style' );
+    $("#title-bars").css('color', 'gray');
+    $("#title-bubbles").css('color', 'black');
+    $("#bubbles").show();
+    $("#bars").hide();
+  }
+  
+  function show_bars(){
+    $("#bubbles").removeAttr( 'style' );
+    $("#bars").removeAttr( 'style' );
+    $("#title-bars").removeAttr( 'style' );
+    $("#title-bubbles").removeAttr( 'style' );
+    $("#title-bars").css('color', 'black');
+    $("#title-bubbles").css('color', 'gray');
+    $("#bubbles").hide();
+    $("#bars").show();
+  }

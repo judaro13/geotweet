@@ -1,7 +1,9 @@
 :javascript
+  var w = #{params[:stweet] ? 1200 : 800}
+  var h = #{params[:stweet] ? 600 : 500}
   var margin = {top: 20, right: 20, bottom: 30, left: 40},
-      width = 560 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = w - margin.left - margin.right,
+      height = h - margin.top - margin.bottom;
   
   var x0 = d3.scale.ordinal()
       .rangeRoundBands([0, width], .1);
