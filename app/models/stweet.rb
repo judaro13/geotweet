@@ -11,8 +11,11 @@ class Stweet
   field :hashtags, type: Array, default: []
   field :rank_lexicon
   field :rank_total_lexicon, type: Integer
+  field :rank_lexicon_total
+  field :rank_nlp_score
   field :rank_me, type: Integer
   field :rank_nlp, type: Integer
+  field :text
   
   
   field :city, type: String
@@ -34,7 +37,10 @@ class Stweet
   
   def set_totals
     self.rank_total_lexicon = self.rank_lexicon if self.rank_lexicon.kind_of?(Integer)
+    self.rank_total_lexicon = self.rank_lexicon_total if self.rank_lexicon_total.kind_of?(Integer)
     self.rank_total_lexicon = self.rank_lexicon.first["total"] if self.rank_lexicon.kind_of?(Array)
+    self.rank_total_lexicon = self.rank_lexicon if self.rank_lexicon.kind_of?(Integer)
+    self.rank_nlp = self.rank_nlp_score 
   end
   
   def set_location

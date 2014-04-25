@@ -5,7 +5,7 @@ class Tag
   
   field :name, type: String
   field :counter, type: Integer, default: 0
-  field :lang
+  field :lang, type: String
   
   field :rank, type: Hash, default: {}
   field :rank_ling_pipe, type: Hash, default: {}

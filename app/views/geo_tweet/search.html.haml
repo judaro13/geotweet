@@ -1,0 +1,48 @@
+= render "map"          
+.container
+  .marketing  
+    %h3
+      Búsqueda de 
+      =params[:q] 
+    %h4
+      = "#{@count} resultados"
+
+.container
+  .marketing        
+    #spider
+      #chart
+= render "spider", tweets: tweets_for_spider(@tweets).to_json
+.container
+  .marketing  
+    - @tweets.to_a[0..20].each do |t|
+      .itemsTitle
+      %h4
+        =t.content
+      
+      -if @lang.include?("Esp")
+        %p
+          %b
+            = rank_span(t.rank_lexicon).html_safe
+            Lexicon-Based Sentiment Analysis
+        
+        %p
+          %b
+            = rank_span(t.rank_nlp).html_safe
+            Natural Languague Procesator
+        %p
+          %b
+            = rank_span(t.rank_me).html_safe
+            Máxima Entropia
+      -else
+        %p
+          %b
+            = lbsa_span(t.rank_total_lexicon).html_safe
+            Lexicon-Based Sentiment Analysis
+          %p
+            %b
+              = rank_span(t.rank).html_safe
+              Twitter Sentiment Dataset 2008 Debates
+          %p
+            %b
+              = rank_span(t.rank_total_ling_pipe).html_safe
+              Ling Pipe

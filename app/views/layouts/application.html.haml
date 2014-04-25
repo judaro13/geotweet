@@ -34,7 +34,9 @@
                 %li{class: params[:stweet] || request.url.include?("colombian") ? "active" : ""}
                   = link_to "Tweets Colombianos", colombian_tweets_path
                 %li
-                  alasdf
+                  = form_tag search_path, method: :post, class: "navbar-form navbar-left" do
+                    = text_field_tag :q, "", class: "form-control", placeholder: "Buscar" 
+                    = select_tag :lang, options_for_select([ "Español", "Inglés" ], @lang), class: "form-control"
     = yield
 
     %footer
