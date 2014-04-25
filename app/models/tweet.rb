@@ -22,7 +22,7 @@ class Tweet
   spatial_index :location
   
 #   before_save :set_tweet_location
-#   before_save :set_tweet_hashtags
+  before_save :set_tweet_hashtags
   
   def set_tweet_location
     regex = /\b#{ Regexp.union(CITIES) }\b/i
@@ -38,11 +38,20 @@ class Tweet
     hashtags = self.content.scan(regex)
     unless hashtags.empty?
       Set.new(hashtags.flatten).to_a.each do |tag|
-        if tag = Tag.where(name: tag).first
-          tag.up_counter
-        else
-          Tag.create(name: tag)
+        tag = Tag.where(name: tag).first
+        unless tag
+          tag = Tag.new
         end
+        tag.rank_lexicon[self.rank_total_lexicon.to_s] ||= 0 if self.rank_total_lexicon
+        tag.rank_lexicon[self.rank_total_lexicon.to_s] += 1 if self.rank_total_lexicon
+        
+        tag.rank[self.rank.to_s] ||= 0 if self.rank
+        tag.rank[self.rank.to_s] += 1 if self.rank
+        
+        tag.rank_ling_pipe[self.rank_ling_pipe.to_s] ||= 0 if self.rank_ling_pipe
+        tag.rank_ling_pipe[self.rank_ling_pipe.to_s] += 1 if self.rank_ling_pipe
+        
+        tag.up_counter
       end
     end
   end

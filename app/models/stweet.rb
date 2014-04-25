@@ -9,40 +9,40 @@ class Stweet
   field :ranks, type: Hash, default: {}
   field :rank, type: Integer
   field :hashtags, type: Array, default: []
-  field :rank_lexicon, type: Hash, default: {}
+  field :rank_lexicon
   field :rank_total_lexicon, type: Integer
+  field :rank_me, type: Integer
+  field :rank_nlp, type: Integer
+  
   
   field :city, type: String
+  field :department, type: String
+  field :col_location, type: Hash, default: {}
   field :location, type: Point
   
   belongs_to :user
   
   spatial_index :location
   
-#   before_save :set_tweet_location
+  before_save :set_totals
+  before_save :set_location
   before_save :set_tweet_hashtags
-  
-
-  CITIES = ['Bogotá','Bogota''Medellín','Medellin','Cali','Barranquilla','Cartagena','Cúcuta','Cucuta','Soledad','Bucaramanga','Soacha','Santa Marta', 'Villavicencio', 'Pereira', 'Bello', 'Valledupar', 'Montería', 'Monteria', 'Pasto', 'Manizales', 'Buenaventura', 'Neiva', 'Palmira', 'Armenia', 'Popayán', 'Popayan', 'Sincelejo', 'Itagui', 'Floridablanca', 'Riohacha', 'Envigado', 'Tuluá', 'Tuluá'].uniq(&:downcase).sort_by(&:downcase)
   
   def content
     self.text
   end
   
-  def set_tweet_location
-    unless  self.city
-      regex = /\b#{ Regexp.union(CITIES) }\b/i
-      cities = self.text.scan(regex)
-      if city = cities.first
-        self.city = city
-        begin
-          self.location = Geocoder.search(city+", Colombia").first.coordinates
-        rescue
-          self.city = nil
-        end
-      end
-    end
-    self.rank_total_lexicon = self.rank_lexicon.first["total"].to_i if self.rank_lexicon.first
+  def set_totals
+    self.rank_total_lexicon = self.rank_lexicon if self.rank_lexicon.kind_of?(Integer)
+    self.rank_total_lexicon = self.rank_lexicon.first["total"] if self.rank_lexicon.kind_of?(Array)
+  end
+  
+  def set_location
+     if col_location && col_location.kind_of?(Hash) && !col_location.empty?
+       self.location = [self.col_location["lat"], self.col_location["lon"]]
+     else
+       self.location = nil
+     end
   end
   
   def set_tweet_hashtags
@@ -51,15 +51,23 @@ class Stweet
     unless hashtags.empty?
       self.hashtags = Set.new(hashtags.flatten).to_a
       self.hashtags.each do |t|
-        if tag = Tag.where(name: t).first
-          tag.lang = "es"
-          tag.up_counter
-        else
+       tag = Tag.where(name: t).first
+        unless tag
           tag = Tag.new
           tag.name = t
-          tag.lang = "es"
-          tag.save
         end
+        
+        tag.rank_lexicon[self.rank_total_lexicon.to_s] ||= 0 if self.rank_total_lexicon
+        tag.rank_lexicon[self.rank_total_lexicon.to_s] += 1 if self.rank_total_lexicon
+        
+        tag.rank_me[self.rank_me.to_s] ||= 0 if self.rank_me
+        tag.rank_me[self.rank_me.to_s] += 1 if self.rank_me
+        
+        tag.rank_nlp[self.rank_nlp.to_s] ||= 0 if self.rank_nlp
+        tag.rank_nlp[self.rank_nlp.to_s] += 1 if self.rank_nlp
+        
+        tag.lang = "es"
+        tag.up_counter
       end
     end
   end

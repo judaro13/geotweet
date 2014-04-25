@@ -33,6 +33,8 @@
                   = link_to "Tweets en Inglés", root_path
                 %li{class: params[:stweet] || request.url.include?("colombian") ? "active" : ""}
                   = link_to "Tweets Colombianos", colombian_tweets_path
+                %li
+                  alasdf
     = yield
 
     %footer

@@ -28,6 +28,14 @@ GIT
       activesupport (>= 3.2)
       mongoid (>= 3.0.0)
 
+GIT
+  remote: git://github.com/susieyy/mongoid-mapreduce.git
+  revision: a14f2ab840da076275227fd6589084e54a0a5885
+  branch: master
+  specs:
+    mongoid-mapreduce (0.1.4.1)
+      mongoid
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -160,6 +168,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mongoid!
+  mongoid-mapreduce!
   mongoid_geospatial!
   mongoid_indexing!
   pry
